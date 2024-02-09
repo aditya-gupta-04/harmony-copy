@@ -76,7 +76,7 @@ def _save_sample_images(dataset_name, batch_size, recon_image, image, pixel, mu=
         i += 1
 
     fig.subplots_adjust(wspace=0, hspace=0)
-    plt.savefig("Harmony_input_image_sample" + dataset_name + ".png", bbox_inches="tight")
+    plt.savefig("Harmony_input_image_sample_" + dataset_name + ".png", bbox_inches="tight")
 
 
 def generate_manifold_images(dataset_name, trained_vae, pixel, z_dim=1, batch_size=100, device='cuda'):
@@ -169,5 +169,5 @@ def save_latent_variables(dataset_name, data_loader, siamese, type, pixel, z_dim
             phi_np = phi1.cpu().detach().numpy()
             Allphi.append(phi_np)
     PhiArr = np.array(Allphi).reshape(count * batch_size, -1)
-    filepath = 'Harmony_latent_factors' + dataset_name + '_' + type + 'z_dim_' + str(z_dim) + '.np'
+    filepath = 'Harmony_latent_factors_' + dataset_name + '_' + type + '_z_dim_' + str(z_dim) + '.np'
     np.savetxt(filepath, PhiArr)
