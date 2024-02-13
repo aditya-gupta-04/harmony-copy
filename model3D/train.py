@@ -34,7 +34,7 @@ def train_model(dataset_name, siamese, optimizer, train_loader, test_loader, dev
                 loss = loss_fn(image_z1, image_z2, image_x_theta1, image_x_theta2, phi1, phi2, z_dim, w)
                 valid_loss += loss.item()
 
-        epoch_valid_loss.append(train_loss / len(train_loader))
+        epoch_valid_loss.append(valid_loss / len(test_loader))
 
         # print training/validation statistics
         print('Epoch: {} \tTraining Loss: {:.6f} \tValidation Loss: {:.6f}\t'.format(
