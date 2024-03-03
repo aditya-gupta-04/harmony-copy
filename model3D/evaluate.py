@@ -47,9 +47,9 @@ def calculate_score(dataset_name, model, z_dim, pixel, batch_size, device):
     save_latent_variables(dataset_name, test_loader, model, 'test', pixel, z_dim, batch_size, device=device)
     train_phi = np.loadtxt('Harmony_latent_factors_' + dataset_name + '_train_' + 'z_dim_' + str(z_dim) + '.np')
     test_phi = np.loadtxt('Harmony_latent_factors_' + dataset_name + '_test_' + 'z_dim_' + str(z_dim) + '.np')
-    train_semantic_z = train_phi[:, -z_dim:]
-    test_semantic_z = test_phi[:, -z_dim:]
+    train_semantic_z = train_phi[:, 6:6 + z_dim]
+    test_semantic_z = test_phi[:, 6:6 + z_dim]
     train_labels = loadpickle('data/' + dataset_name + '_train_label.pkl')
     test_labels = loadpickle('data/' + dataset_name + '_test_label.pkl')
-    return discrete_factor_prediction_score(train_semantic_z.reshape(-1, z_dim), train_labels['Content'],
-                                            test_semantic_z.reshape(-1, z_dim), test_labels['Content'], 'knn')
+    return discrete_factor_prediction_score(train_semantic_z.reshape(-1, z_dim), train_labels,
+                                            test_semantic_z.reshape(-1, z_dim), test_labels, 'knn')
