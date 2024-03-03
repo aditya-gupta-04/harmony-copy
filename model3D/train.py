@@ -1,11 +1,16 @@
 import torch
 from .utils import *
 from .model import save_ckp, load_ckp
-
+from .evaluate import *
+import pandas as pd
+import matplotlib.pyplot as plt
 
 def train_model(dataset_name, siamese, optimizer, train_loader, test_loader, device,
                 start_epoch, n_epochs, epoch_train_loss, epoch_valid_loss, valid_loss_min,
                 z_dim=2, pixel=64, batch_size=100, w=1):
+
+    sap_score_logs = {'Epoch':[], 'Score':[]}
+
     for epoch in range(start_epoch, n_epochs + 1):
         train_loss = 0.0
         valid_loss = 0.0
@@ -58,4 +63,17 @@ def train_model(dataset_name, siamese, optimizer, train_loader, test_loader, dev
             }
             save_ckp(checkpoint, 'best_model_Harmony_3D_' + dataset_name + '_z_dim_{}.pt'.format(z_dim))
             valid_loss_min = epoch_valid_loss[epoch]
+
+        if epoch % 5 == 0:
+            sap_score = calculate_score(dataset_name, siamese, z_dim, pixel, batch_size, device)
+            sap_score_logs['Epoch'].append(epoch)
+            sap_score_logs['Score'].append(sap_score)
+            print(f"SAP score after {epoch} epochs - {sap_score}")
+
+    plt.plot(sap_score_logs['Epoch'], sap_score_logs['Score'])
+    plt.xlabel('Epochs')
+    plt.ylabel('Score')
+    plt.savefig("sap_score_plot.png")
+    pd.DataFrame(sap_score_logs).to_csv(f'sap_score_logs.csv', index=False)
+
     plot_loss(epoch_train_loss=epoch_train_loss, epoch_valid_loss=epoch_valid_loss)
